@@ -31,6 +31,7 @@ model Drop {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime?
   reservations Reservation[]
+  purchases    Purchase[]
 
   @@map("drops")
 }
@@ -42,6 +43,7 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   reservations Reservation[]
+  purchases    Purchase[]
 
   @@map("users")
 }
@@ -59,4 +61,17 @@ model Reservation {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("reservations")
+}
+
+model Purchase {
+  id     String @id @default(cuid())
+  dropId String
+  userId String
+
+  createdAt DateTime @default(now())
+
+  drop Drop @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("purchases")
 }
