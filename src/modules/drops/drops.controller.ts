@@ -4,7 +4,7 @@ import { asyncHandler } from '../../utils/asyncHandler';
 import * as dropsService from './drops.service';
 
 export const createDrop = asyncHandler(async (req: Request, res: Response) => {
-  const data = await dropsService.createDrop();
+  const data = await dropsService.createDrop(req.body);
   successResponse(res, data, 201);
 });
 
