@@ -4,23 +4,28 @@ import morgan from 'morgan';
 
 import { AppError } from './utils/errors';
 import { errorMiddleware } from './middleware/error.middleware';
+import routes from './routes';
 
 const app: Application = express();
 
 // Middleware
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    origin: ['http://localhost:5173', 'https://zudrop.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 );
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
+app.use('/api', routes);
+
 // Health check
 app.get('/api/health', (_req: Request, res: Response) => {
-  res.status(200).json({ status: 'ok', message: "Hello from ZuDrop Server" });
+  res.status(200).json({ status: 'ok', message: 'Hello from ZuDrop Server' });
 });
 
 // Catch-all for undefined routes
