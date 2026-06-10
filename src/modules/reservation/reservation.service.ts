@@ -1,4 +1,5 @@
 import { ReservationStatus } from '../../generated/prisma/enums';
+import { emitStockEvent } from '../../config/socket';
 import { client } from '../../prisma/client';
 import { AppError } from '../../utils/errors';
 
@@ -58,15 +59,20 @@ export const createReservation = async (body: CreateReservationBody) => {
         },
       });
 
-      await txClient.drop.update({
+      const updatedDrop = await txClient.drop.update({
         where: { id: dropId },
         data: { availableStock: { decrement: 1 } },
       });
 
-      return reservation;
+      return { reservation, updatedDrop };
     });
 
-    return result;
+    emitStockEvent({
+      action: 'reserved',
+      drop: result.updatedDrop,
+    });
+
+    return result.reservation;
   } catch (error) {
     throw new AppError(
       error instanceof AppError ? error.message : 'Failed to create reservation',
