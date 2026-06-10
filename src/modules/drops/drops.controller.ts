@@ -3,7 +3,6 @@ import { successResponse } from '../../utils/apiResponse';
 import { asyncHandler } from '../../utils/asyncHandler';
 
 import * as dropsService from './drops.service';
-import { CreateDropBody } from './drops.validation';
 
 export const createDrop = asyncHandler(async (req: Request, res: Response) => {
   const data = await dropsService.createDrop(req.body);
