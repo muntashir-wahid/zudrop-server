@@ -5,7 +5,7 @@ export const SOCKET_EVENTS = {
 } as const;
 
 export type StockEventPayload = {
-  action: 'created' | 'reserved';
+  action: 'created' | 'reserved' | 'expired';
   drop: {
     id: string;
     name: string;

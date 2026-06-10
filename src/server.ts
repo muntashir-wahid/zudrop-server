@@ -5,6 +5,7 @@ import { Server as SocketIOServer } from 'socket.io';
 import app from './app';
 import { allowedOrigins } from './config/cors';
 import { initializeSocket } from './config/socket';
+import { startReservationExpirySweeper } from './modules/reservation/reservation-expiry.service';
 
 const PORT = Number(process.env.PORT ?? 8000);
 
@@ -19,6 +20,8 @@ const io = new SocketIOServer(httpServer, {
 
 initializeSocket(io);
 
+const reservationExpirySweeper = startReservationExpirySweeper();
+
 const startServer = () => {
   httpServer.listen(PORT, () => {
     console.log(`Zudrop Server running on port ${PORT}`);
@@ -27,6 +30,8 @@ const startServer = () => {
 
 const shutdown = (signal: string) => {
   console.log(`${signal} received. Shutting down server...`);
+
+  reservationExpirySweeper.stop();
 
   io.close(() => {
     httpServer.close(() => {
@@ -38,4 +43,7 @@ const shutdown = (signal: string) => {
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
-startServer();
+void (async () => {
+  await reservationExpirySweeper.start();
+  startServer();
+})();
