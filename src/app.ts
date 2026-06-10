@@ -2,6 +2,7 @@ import express, { Application, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
+import { allowedOrigins } from './config/cors';
 import { AppError } from './utils/errors';
 import { errorMiddleware } from './middleware/error.middleware';
 import routes from './routes';
@@ -11,7 +12,7 @@ const app: Application = express();
 // Middleware
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://zudrop.vercel.app'],
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
