@@ -1,4 +1,5 @@
 import { ReservationStatus } from '../../generated/prisma/enums';
+import { expireReservation } from '../reservation/reservation-expiry.service';
 import { client } from '../../prisma/client';
 import { AppError } from '../../utils/errors';
 import { CreatePurchaseBody } from './purchases.validation';
@@ -28,10 +29,7 @@ export const createPurchase = async (body: CreatePurchaseBody) => {
 
   const now = new Date();
   if (activeReservation.expiresAt < now) {
-    await client.reservation.update({
-      where: { id: activeReservation.id },
-      data: { status: ReservationStatus.EXPIRED },
-    });
+    await expireReservation(activeReservation.id, now);
 
     throw new AppError('The reservation has expired', 400);
   }
