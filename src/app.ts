@@ -11,8 +11,9 @@ const app: Application = express();
 // Middleware
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    origin: ['http://localhost:5173', 'https://zudrop.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 );
 app.use(morgan('dev'));
