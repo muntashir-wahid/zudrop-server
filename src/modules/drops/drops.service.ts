@@ -10,7 +10,30 @@ export const createDrop = async (body: CreateDropBody) => {
 };
 
 export const getDrops = async () => {
-  const drops = await client.drop.findMany();
+  const drops = await client.drop.findMany({
+    where: { isActive: true },
+    include: {
+      purchases: {
+        orderBy: { createdAt: 'desc' },
+        take: 3,
+        include: {
+          user: {
+            select: { username: true },
+          },
+        },
+      },
+    },
 
-  return drops;
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const formattedDrops = drops.map((drop) => ({
+    ...drop,
+    purchases: drop.purchases.map((purchase) => ({
+      username: purchase.user.username,
+      purchasedAt: purchase.createdAt,
+    })),
+  }));
+
+  return formattedDrops;
 };
