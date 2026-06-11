@@ -120,9 +120,12 @@ export const startReservationExpirySweeper = () => {
   const start = async () => {
     await runSweep();
 
-    timer = setInterval(() => {
-      void runSweep();
-    }, Number(process.env.RESERVATION_SWEEP_INTERVAL_MS ?? DEFAULT_SWEEP_INTERVAL_MS));
+    timer = setInterval(
+      () => {
+        void runSweep();
+      },
+      Number(process.env.RESERVATION_SWEEP_INTERVAL_MS ?? DEFAULT_SWEEP_INTERVAL_MS),
+    );
   };
 
   const stop = () => {
