@@ -2,7 +2,7 @@ import { ReservationStatus } from '../../generated/prisma/enums';
 import { client } from '../../prisma/client';
 import { emitStockEvent } from '../../config/socket';
 
-const DEFAULT_SWEEP_INTERVAL_MS = 10_000;
+const DEFAULT_SWEEP_INTERVAL_MS = 5_000;
 
 type ExpiredReservationResult = {
   reservationId: string;
