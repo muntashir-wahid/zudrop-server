@@ -8,7 +8,7 @@ export const createPurchase = async (body: CreatePurchaseBody) => {
   const { dropId, username } = body;
 
   const drop = await client.drop.findUnique({
-    where: { id: dropId, isActive: true, availableStock: { gt: 0 } },
+    where: { id: dropId, isActive: true },
   });
 
   if (!drop) {
